@@ -1,4 +1,4 @@
-"""validation/analyse.py on synthetic recordings, in brAIn stream's layout,
+"""validation/analyse.py on synthetic recordings, in brAInStream's layout,
 whose properties are known: it passes a good one, and catches each fault.
 """
 import gzip
@@ -182,8 +182,8 @@ def make_dataset(root: Path, *, alpha=True, n170=True, gaze_offset=0.0,
         "name\ttype\tunits\n" + "".join(
             f"{c}\t{'EOG' if c == 'HEOG' else 'EEG'}\tuV\n" for c in labels))
     events = "onset\tduration\ttrial_type\tvalue\tsource\n" + "".join(
-        f"{time + marker_shift:.6f}\t0\tbrAInstreamValidation\t{text}\t"
-        f"lsl:brAInstreamValidation\n" for time, text in markers)
+        f"{time + marker_shift:.6f}\t0\tbrAInStreamValidation\t{text}\t"
+        f"lsl:brAInStreamValidation\n" for time, text in markers)
     (eeg_dir / f"{STEM}_events.tsv").write_text(events)
     (beh_dir / f"{STEM}_events.tsv").write_text(events)
 
@@ -360,7 +360,7 @@ def test_make_project(tmp_path):
     assert project["devices"]["gp3"]["mode"] == "remote"
     assert project["devices"]["gp3"]["host"] == "10.0.0.5"
     assert project["devices"]["lsl"]["streams"][0]["name"] == \
-        "brAInstreamValidation"
+        "brAInStreamValidation"
     assert project["devices"]["obs"]["label"] == "screen"
     assert "Project:" in out.stdout
 
@@ -488,12 +488,14 @@ def test_camera_seeing_nothing_fails(tmp_path):
     assert "timing could not be measured" in "\n".join(sync.lines)
 
 
-def test_recordings_from_before_the_rename_are_read(tmp_path):
-    """Validation recordings made as brAIn dump: the procedure's markers
-    came from the stream brAIndumpValidation."""
+@pytest.mark.parametrize("old", ["brAIndumpValidation",
+                                 "brAInstreamValidation"])
+def test_recordings_from_before_the_rename_are_read(tmp_path, old):
+    """Validation recordings made as brAIn dump or brAIn stream (0.5.0):
+    the procedure's markers came from a stream of the old name."""
     root = make_dataset(tmp_path / "bids")
     for path in root.rglob("*_events.tsv"):
         path.write_text(path.read_text().replace(
-            "brAInstreamValidation", "brAIndumpValidation"))
+            "brAInStreamValidation", old))
     rec = analyse.load(root, "01")
     assert rec.markers and rec.first("rest_open_start") is not None

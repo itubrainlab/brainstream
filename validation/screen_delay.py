@@ -1,16 +1,16 @@
 """Measure how late OBS's NDI frames are: the value for the Screen Capture's
-Delay setting in brAIn stream.
+Delay setting in brAInStream.
 
     python validation/screen_delay.py [--psychopy PATH] [--flashes 20]
 
 PsychoPy shows the screen dark and light in turn, once a second, sending
 an LSL marker stamped at each flip. Meanwhile this receives OBS's NDI
-stream as brAIn stream does (frames placed by their sender time stamps,
+stream as brAInStream does (frames placed by their sender time stamps,
 with no delay taken off) and finds the first frame showing each change.
 The median time from flip to frame is OBS's delay: capture, rendering and
 NDI.
 
-Run it with brAIn stream's Python; PsychoPy (the standalone app's Python by
+Run it with brAInStream's Python; PsychoPy (the standalone app's Python by
 default) does the flashing. Keep OBS capturing the screen the flashes are
 on, and don't touch anything while it runs (about half a minute).
 """
@@ -27,7 +27,7 @@ from pathlib import Path
 
 import numpy as np
 
-STREAM = "brAInstreamScreenDelay"
+STREAM = "brAInStreamScreenDelay"
 PSYCHOPY_APP = "/Applications/PsychoPy.app/Contents"
 
 #: The flasher, run by PsychoPy's Python.
@@ -117,7 +117,7 @@ def main(argv=None) -> int:
         sample, stamp = inlet.pull_sample(timeout=1.0)
         if sample is None:
             continue
-        # LSL's clock onto brAIn stream's: both steady, so an offset.
+        # LSL's clock onto brAInStream's: both steady, so an offset.
         offset = clock.now() - pylsl.local_clock()
         stamp += inlet.time_correction()
         markers.append((stamp + offset, sample[0]))
@@ -156,7 +156,7 @@ def main(argv=None) -> int:
     print(f"{len(d)} changes: median {np.median(d):.0f} ms "
           f"(IQR {q1:.0f}-{q3:.0f} ms, range {d.min():.0f}-{d.max():.0f})")
     print(f"Fps of the stream: {1 / np.median(np.diff(times)):.1f}")
-    print(f"\nSet the Screen Capture's Delay in brAIn stream to "
+    print(f"\nSet the Screen Capture's Delay in brAInStream to "
           f"{np.median(d):.0f} ms.")
     return 0
 

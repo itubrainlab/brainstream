@@ -1,5 +1,5 @@
 #!/bin/bash
-# Build "brAIn stream.app" and a DMG for macOS (Apple Silicon).
+# Build "brAInStream.app" and a DMG for macOS (Apple Silicon).
 #
 #     packaging/macos/build_app.sh
 #
@@ -8,7 +8,7 @@
 # library versions and PySide6 for the icon.
 #
 # The app carries its own Python (a relocatable python-build-standalone
-# build, as uv installs them) and the wheels of brAIn stream
+# build, as uv installs them) and the wheels of brAInStream
 # and OpenGP3; see ../common.sh. Its first launch installs g.Pype, g.tec's
 # gtec-unicorn driver and the other pinned libraries from PyPI. gtec-unicorn's
 # macOS wheels need macOS 14 on Apple Silicon, hence the app's minimum.
@@ -32,9 +32,9 @@ WORK="$(mktemp -d)"
 trap 'rm -rf "$WORK"' EXIT
 source "$HERE/../common.sh"
 BUILD_ID="$VERSION-$COMMIT-$ARCH"
-APP="$OUT/brAIn stream.app"
+APP="$OUT/brAInStream.app"
 RES="$APP/Contents/Resources"
-echo "Building brAIn stream $BUILD_ID"
+echo "Building brAInStream $BUILD_ID"
 
 build_wheels
 MACOSX_DEPLOYMENT_TARGET=14.0 pin_requirements \
@@ -61,8 +61,8 @@ cat > "$APP/Contents/Info.plist" <<PLIST
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>CFBundleName</key><string>brAIn stream</string>
-    <key>CFBundleDisplayName</key><string>brAIn stream</string>
+    <key>CFBundleName</key><string>brAInStream</string>
+    <key>CFBundleDisplayName</key><string>brAInStream</string>
     <key>CFBundleIdentifier</key><string>dk.itu.brainlab.brainstream</string>
     <key>CFBundleExecutable</key><string>brainstream</string>
     <key>CFBundleIconFile</key><string>brainstream</string>
@@ -73,11 +73,11 @@ cat > "$APP/Contents/Info.plist" <<PLIST
     <key>LSApplicationCategoryType</key><string>public.app-category.education</string>
     <key>NSHighResolutionCapable</key><true/>
     <key>NSCameraUsageDescription</key>
-    <string>brAIn stream records video from the webcam.</string>
+    <string>brAInStream records video from the webcam.</string>
     <key>NSBluetoothAlwaysUsageDescription</key>
-    <string>brAIn stream reads the Unicorn EEG headset, the Polar H10 and the Shimmer over Bluetooth.</string>
+    <string>brAInStream reads the Unicorn EEG headset, the Polar H10 and the Shimmer over Bluetooth.</string>
     <key>NSLocalNetworkUsageDescription</key>
-    <string>brAIn stream reads eye trackers over the Open Gaze API and receives LSL streams and triggers.</string>
+    <string>brAInStream reads eye trackers over the Open Gaze API and receives LSL streams and triggers.</string>
 </dict>
 </plist>
 PLIST
@@ -91,9 +91,9 @@ STAGE="$WORK/dmg"
 mkdir -p "$STAGE"
 cp -R "$APP" "$STAGE/"
 ln -s /Applications "$STAGE/Applications"
-DMG="$OUT/brAInstream-$VERSION-macos-$ARCH.dmg"
+DMG="$OUT/brAInStream-$VERSION-macos-$ARCH.dmg"
 rm -f "$DMG"
-hdiutil create -quiet -volname "brAIn stream" -srcfolder "$STAGE" -ov \
+hdiutil create -quiet -volname "brAInStream" -srcfolder "$STAGE" -ov \
     -format UDZO "$DMG"
 
 echo "Built:"

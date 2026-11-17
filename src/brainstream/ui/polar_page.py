@@ -122,7 +122,7 @@ class PolarPage(DevicePage):
             form.changed.connect(lambda _: self.config_changed.emit())
         self.add_settings_tab(strap, acc, hint(
             f"The ECG ({ECG_RATE:g} Hz, µV), the heart rate and the RR "
-            "intervals are always recorded. On macOS, brAIn stream asks once "
+            "intervals are always recorded. On macOS, brAInStream asks once "
             "for Bluetooth access."))
 
     def _search(self):

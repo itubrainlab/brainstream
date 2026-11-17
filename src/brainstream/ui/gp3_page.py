@@ -139,7 +139,7 @@ class GP3Page(DevicePage):
                     "(the GP3 or the GP3 HD; Windows needs UsbDk or "
                     "WinUSB, see OpenGP3). On another computer, it runs "
                     "opengp3 server or Gazepoint "
-                    "Control, and brAIn stream reads it over the network.")
+                    "Control, and brAInStream reads it over the network.")
         conn.choice("tracker", "Tracker", TRACKERS,
                     "A webcam is OpenGP3's webcam eye tracking: about 2-5° "
                     "accurate instead of the GP3's 0.5°, sensitive to head "

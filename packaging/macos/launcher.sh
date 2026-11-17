@@ -1,14 +1,14 @@
 #!/bin/bash
-# brAIn stream.app's executable.
+# brAInStream.app's executable.
 #
-# The app carries its own Python and the wheels of brAIn stream and
+# The app carries its own Python and the wheels of brAInStream and
 # OpenGP3, but not g.Pype or g.tec's gtec-unicorn driver:
 # their licences do not allow them in a bundle. On first launch, and after
 # an update, bootstrap.py installs them and the other libraries from PyPI
-# into ~/Library/Application Support/brAIn stream/runtime.
+# into ~/Library/Application Support/brAInStream/runtime.
 set -u
 
-# This app declares Bluetooth use, so brAIn stream need not relaunch itself
+# This app declares Bluetooth use, so brAInStream need not relaunch itself
 # to get it (see brainstream/macos.py).
 export BRAINSTREAM_BUNDLED=1
 
@@ -16,7 +16,7 @@ CONTENTS="$(cd "$(dirname "$0")/.." && pwd)"
 RES="$CONTENTS/Resources"
 PYTHON="$RES/python/bin/python3"
 BUILD="$(cat "$RES/build-id")"
-LIB="$HOME/Library/Application Support/brAIn stream/runtime/$BUILD"
+LIB="$HOME/Library/Application Support/brAInStream/runtime/$BUILD"
 
 if [ ! -f "$LIB/.complete" ]; then
     "$PYTHON" -I -B "$RES/bootstrap.py" "$RES" "$LIB" || exit 1

@@ -1,19 +1,19 @@
-# Install brAIn stream for the current user: copies this folder to
-# %LOCALAPPDATA%\brAIn stream\app, adds a Start menu shortcut with the icon,
+# Install brAInStream for the current user: copies this folder to
+# %LOCALAPPDATA%\brAInStream\app, adds a Start menu shortcut with the icon,
 # then sets it up (downloads g.Pype and the libraries from PyPI). No
 # administrator rights needed. Started by install.cmd.
 $ErrorActionPreference = 'Stop'
 
 if (-not [Environment]::Is64BitOperatingSystem) {
-    throw 'brAIn stream needs 64-bit Windows.'
+    throw 'brAInStream needs 64-bit Windows.'
 }
 
 $here = $PSScriptRoot
-$data = Join-Path $env:LOCALAPPDATA 'brAIn stream'
+$data = Join-Path $env:LOCALAPPDATA 'brAInStream'
 $app = Join-Path $data 'app'
 
 if ($here.TrimEnd('\') -ne $app) {
-    Write-Host "Copying brAIn stream to $app"
+    Write-Host "Copying brAInStream to $app"
     if (Test-Path $app) { Remove-Item -Recurse -Force $app }
     New-Item -ItemType Directory -Force -Path $app | Out-Null
     Copy-Item -Recurse -Force (Join-Path $here '*') $app
@@ -24,7 +24,7 @@ Get-ChildItem -Recurse -File $app | Unblock-File
 
 $programs = [Environment]::GetFolderPath('Programs')
 $link = (New-Object -ComObject WScript.Shell).CreateShortcut(
-    (Join-Path $programs 'brAIn stream.lnk'))
+    (Join-Path $programs 'brAInStream.lnk'))
 $link.TargetPath = Join-Path $app 'python\pythonw.exe'
 $link.Arguments = '-I "' + (Join-Path $app 'launcher.py') + '"'
 $link.WorkingDirectory = $app
@@ -41,4 +41,4 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 Write-Host ''
-Write-Host 'brAIn stream is installed: open it from the Start menu.'
+Write-Host 'brAInStream is installed: open it from the Start menu.'

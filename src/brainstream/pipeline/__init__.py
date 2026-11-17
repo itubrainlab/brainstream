@@ -1,4 +1,4 @@
-"""brAIn stream's recording pipeline, organised around g.Pype: the device
+"""brAInStream's recording pipeline, organised around g.Pype: the device
 sources (:mod:`.sources`), the BIDS writers (:mod:`.writers`) and the one
 session pipeline that carries them (:mod:`.session`), and the nodes the
 device pages draw from (:mod:`.views`)."""

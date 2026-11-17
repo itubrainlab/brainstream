@@ -43,7 +43,7 @@ for name, check in (
         drivers[name] = check(module)
     except Exception as error:  # noqa: BLE001
         sys.exit(f"{name} does not load: {type(error).__name__}: {error}")
-print(f"brAIn stream {brainstream.__version__}, g.Pype {gpype.__version__}, "
+print(f"brAInStream {brainstream.__version__}, g.Pype {gpype.__version__}, "
       f"Python {sys.version.split()[0]} on {sys.platform}", flush=True)
 for name, value in drivers.items():
     print(f"  {name}: {value}", flush=True)

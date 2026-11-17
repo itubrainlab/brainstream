@@ -1,4 +1,4 @@
-"""What every device brAIn stream records has in common.
+"""What every device brAInStream records has in common.
 
 Every device is an input of the session pipeline (:mod:`brainstream.pipeline`):
 it builds its g.Pype nodes into it (:meth:`Device.build`), and connecting

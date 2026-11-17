@@ -101,7 +101,7 @@ class WebcamSource(FrameSource):
         if not capture.isOpened():
             raise ConnectionError(
                 f"Camera {self.index} could not be opened. Check that it is "
-                f"connected and not in use (on macOS, that brAIn stream may "
+                f"connected and not in use (on macOS, that brAInStream may "
                 f"use the camera: System Settings → Privacy & Security → "
                 f"Camera).")
         if self.width and self.height:
@@ -653,7 +653,7 @@ class VideoDevice(Device):
             "ImagePixelFormat": PIXEL_FORMAT,
             "FrameTimes": rec.frames.name,
             "DroppedFrames": rec.dropped,
-            "SoftwareVersions": f"brAIn stream {__version__}",
+            "SoftwareVersions": f"brAInStream {__version__}",
             "SimulatedDevice": self.simulated,
         }
         if cfg.position:

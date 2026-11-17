@@ -89,4 +89,4 @@ def apply(app) -> None:
 
     gpype_theme.apply(app, gpype_theme.DARK)
     app.setStyleSheet(app.styleSheet() + EXTRA)
-    identity.apply(app, "brAIn stream", icon=APP_ICON)
+    identity.apply(app, "brAInStream", icon=APP_ICON)

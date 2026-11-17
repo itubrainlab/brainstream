@@ -1,4 +1,4 @@
-"""brAIn stream's BIDS writers: g.Pype file writers that write only while a
+"""brAInStream's BIDS writers: g.Pype file writers that write only while a
 recording is open.
 
 g.Pype's :class:`~gpype.backend.sinks.base.file_writer.FileWriter` writes

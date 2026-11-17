@@ -610,7 +610,7 @@ class PolarDevice(Device):
 
     def _write_sidecars(self, target, written, events_path, info, acc_rate,
                         reference) -> None:
-        software = [f"brAIn stream {__version__}", f"g.Pype {gp.__version__}"]
+        software = [f"brAInStream {__version__}", f"g.Pype {gp.__version__}"]
         if info.get("firmware"):
             software.append(f"H10 firmware {info['firmware']}")
         timestamp = {"Description": "Time of the sample, seconds since "

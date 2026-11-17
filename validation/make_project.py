@@ -1,8 +1,8 @@
-"""Make the brAIn stream project the validation procedure records with.
+"""Make the brAInStream project the validation procedure records with.
 
 The lab (two computers, see validation/LAB.md), on the recording computer:
 
-    python validation/make_project.py "~/brAIn stream/lab-validation" --lab \\
+    python validation/make_project.py "~/brAInStream/lab-validation" --lab \\
         --stimulus-host 192.168.1.20 --electrodes validation/cap64.txt
 
 The same as::
@@ -12,7 +12,7 @@ The same as::
 
 A single computer with a Unicorn (the first sessions)::
 
-    python validation/make_project.py "~/brAIn stream/validation" \\
+    python validation/make_project.py "~/brAInStream/validation" \\
         --unicorn UN-2024.10.18 --gp3-host 127.0.0.1
 
 Devices: the EEG (g.HIamp or Unicorn), the GP3 (or GP3 HD) read over the
@@ -38,13 +38,13 @@ from brainstream.devices.video import ObsConfig, WebcamConfig
 from brainstream.project import Project, remember
 
 TASK = "facevalidation"
-MARKERS = "brAInstreamValidation"
+MARKERS = "brAInStreamValidation"
 
 
 def parse_args(argv=None):
     p = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     p.add_argument("folder", help="where the project goes")
-    p.add_argument("--name", default="brAIn stream validation")
+    p.add_argument("--name", default="brAInStream validation")
     p.add_argument("--lab", action="store_true",
                    help="the lab's two-computer setup: g.HIamp (64 channels, "
                         "64 bipolar EOG, 0.01-100 Hz, 50 Hz notch), the GP3 "
@@ -99,7 +99,7 @@ def parse_args(argv=None):
         args.notch = args.notch or 50.0
         args.webcam = args.webcam or "first"
         args.name = args.name if args.name != p.get_default("name") \
-            else "brAIn stream lab validation"
+            else "brAInStream lab validation"
     if args.stimulus_host:
         args.gp3_host = args.stimulus_host
     args.eeg = args.eeg or "unicorn"
@@ -142,7 +142,7 @@ def hiamp_config(args) -> dict:
     except Exception as error:  # noqa: BLE001
         sys.exit(f"Could not list the g.HIamp's filters ({error}). Connect "
                  f"the amplifier and run this again, or leave out "
-                 f"--bandpass/--notch and choose them in brAIn stream "
+                 f"--bandpass/--notch and choose them in brAInStream "
                  f"(g.HIamp, Settings, Load from amplifier).")
     cfg = device.config
     if args.bandpass:
@@ -187,7 +187,7 @@ def webcam_config(args) -> dict:
 def main(argv=None) -> int:
     args = parse_args(argv)
     project = Project.create(Path(args.folder), args.name, task=TASK,
-                             description="Validation of brAIn stream's "
+                             description="Validation of brAInStream's "
                                          "recordings: EEG alpha and signal "
                                          "quality, gaze accuracy, N170 to "
                                          "faces and the synchronisation of "

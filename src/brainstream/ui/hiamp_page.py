@@ -219,7 +219,7 @@ class HIampPage(DevicePage):
         for form in self._forms:
             form.changed.connect(self._changed)
         self.add_settings_tab(amp, cap, hardware, hint(
-            "The g.HIamp needs g.tec's gtec-gds driver, which brAIn stream "
+            "The g.HIamp needs g.tec's gtec-gds driver, which brAInStream "
             "installs with g.Pype (Windows, Linux and macOS)."))
 
     @staticmethod

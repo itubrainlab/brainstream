@@ -1,4 +1,4 @@
-"""A simulated Unicorn Hybrid Black, for trying brAIn stream without a
+"""A simulated Unicorn Hybrid Black, for trying brAInStream without a
 headset.
 
 :class:`SimulatedAmplifier` stands in for gtec-unicorn's ``Amplifier``:

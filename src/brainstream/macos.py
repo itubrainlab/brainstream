@@ -2,7 +2,7 @@
 
 macOS ends a process that uses Bluetooth unless the app it belongs to
 declares why (``NSBluetoothAlwaysUsageDescription``). Started from a
-terminal, brAIn stream belongs to the terminal app, so it relaunches itself
+terminal, brAInStream belongs to the terminal app, so it relaunches itself
 inside a small app bundle that declares it; output still comes to the
 terminal. The GP3 (USB) and the Open Gaze API (network) need none of this.
 """
@@ -15,23 +15,23 @@ import sys
 from pathlib import Path
 
 BUNDLED_ENV = "BRAINSTREAM_BUNDLED"
-BUNDLE = (Path.home() / "Library" / "Caches" / "brAIn stream"
-          / "brAIn stream.app")
+BUNDLE = (Path.home() / "Library" / "Caches" / "brAInStream"
+          / "brAInStream.app")
 
 _INFO = {
-    "CFBundleName": "brAIn stream",
-    "CFBundleDisplayName": "brAIn stream",
+    "CFBundleName": "brAInStream",
+    "CFBundleDisplayName": "brAInStream",
     "CFBundleIdentifier": "dk.itu.brainlab.brainstream.terminal",
     "CFBundleExecutable": "brainstream",
     "CFBundlePackageType": "APPL",
     "LSUIElement": False,
     "NSHighResolutionCapable": True,
     "NSCameraUsageDescription":
-        "brAIn stream records video from the webcam.",
+        "brAInStream records video from the webcam.",
     "NSBluetoothAlwaysUsageDescription":
-        "brAIn stream reads the Unicorn EEG headset over Bluetooth.",
+        "brAInStream reads the Unicorn EEG headset over Bluetooth.",
     "NSLocalNetworkUsageDescription":
-        "brAIn stream reads eye trackers over the Open Gaze API and receives "
+        "brAInStream reads eye trackers over the Open Gaze API and receives "
         "triggers over UDP.",
 }
 

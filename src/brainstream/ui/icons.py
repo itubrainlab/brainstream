@@ -1,5 +1,5 @@
 """Icons, drawn: the toolbar's and status bar's (:mod:`.glyphs`), and
-brAIn stream's own, drawn in the same way."""
+brAInStream's own, drawn in the same way."""
 from __future__ import annotations
 
 from PySide6.QtCore import QPointF, QRectF, Qt

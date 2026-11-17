@@ -45,10 +45,10 @@ class DevicePage(QWidget):
         header.addWidget(self.connect_button)
         column.addLayout(header)
 
-        #: Says so when brAIn stream was started with --simulate: every
+        #: Says so when brAInStream was started with --simulate: every
         #: device is simulated then, whatever its settings say.
         self.forced = hint(
-            "brAIn stream was started with --simulate: every device is "
+            "brAInStream was started with --simulate: every device is "
             "simulated, whatever its settings say. Start it without "
             "--simulate to use the hardware.")
         self.forced.setStyleSheet(f"color: {theme.WARNING}")
@@ -68,12 +68,12 @@ class DevicePage(QWidget):
             box_ = getattr(form, "fields", {}).get("simulate")
             if box_ is not None and self.device.force_simulate:
                 # Shown ticked, but not saved: the project keeps its own
-                # setting for when brAIn stream runs without --simulate.
+                # setting for when brAInStream runs without --simulate.
                 box_.blockSignals(True)
                 box_.setChecked(True)
                 box_.blockSignals(False)
                 box_.setEnabled(False)
-                box_.setToolTip("brAIn stream was started with --simulate")
+                box_.setToolTip("brAInStream was started with --simulate")
         layout.addStretch(1)
         scroll = QScrollArea()
         scroll.setWidgetResizable(True)

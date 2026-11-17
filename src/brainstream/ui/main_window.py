@@ -1,4 +1,4 @@
-"""brAIn stream's main window: a toolbar over a viewer, with a column of the
+"""brAInStream's main window: a toolbar over a viewer, with a column of the
 project's devices on the left."""
 from __future__ import annotations
 
