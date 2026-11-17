@@ -1,6 +1,6 @@
-"""brAIn stream validation procedure (PsychoPy).
+"""brAInStream validation procedure (PsychoPy).
 
-Checks that brAIn stream records the lab's signals correctly and in step:
+Checks that brAInStream records the lab's signals correctly and in step:
 EEG (g.HIamp or Unicorn), gaze (Gazepoint GP3 or GP3 HD), the screen (OBS
 over NDI), a camera, and this procedure's own events, sent as Lab
 Streaming Layer markers.
@@ -17,7 +17,7 @@ Streaming Layer markers.
     8. 2 more moving targets, then 10 more flashes
     9. Debriefing
 
-Every step is an LSL marker (stream "brAInstreamValidation", type
+Every step is an LSL marker (stream "brAInStreamValidation", type
 "Markers"), stamped at the screen flip that shows it. Run it with
 PsychoPy (Coder: open and Run; or from a terminal with PsychoPy's Python):
 
@@ -39,7 +39,7 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
-STREAM_NAME = "brAInstreamValidation"
+STREAM_NAME = "brAInStreamValidation"
 STREAM_TYPE = "Markers"
 SOURCE_ID = "brainstream-validation-markers"
 
@@ -82,7 +82,7 @@ def parse_args(argv=None):
     p.add_argument("--dry-run", action="store_true",
                    help="short timings, in a window: for trying it out")
     p.add_argument("--no-wait", action="store_true",
-                   help="do not wait for brAIn stream to receive the markers")
+                   help="do not wait for brAInStream to receive the markers")
     p.add_argument("--auto", action="store_true",
                    help="go on by itself after each screen, without keys: "
                         "for testing the recording without a participant")
@@ -98,7 +98,7 @@ class Markers:
         from pylsl import StreamInfo, StreamOutlet, local_clock
         info = StreamInfo(STREAM_NAME, STREAM_TYPE, 1, 0, "string",
                           SOURCE_ID)
-        info.desc().append_child_value("manufacturer", "brAIn stream")
+        info.desc().append_child_value("manufacturer", "brAInStream")
         info.desc().append_child_value("procedure", "face validation")
         self.outlet = StreamOutlet(info)
         self.clock = local_clock
@@ -362,10 +362,10 @@ def main(argv=None) -> int:
 
     log_rows = []
     try:
-        # 0. brAIn stream must be receiving the markers before anything.
+        # 0. brAInStream must be receiving the markers before anything.
         if not args.no_wait:
-            text.text = ("Waiting for brAIn stream to receive the marker "
-                         f"stream '{STREAM_NAME}'...\n\nIn brAIn stream: "
+            text.text = ("Waiting for brAInStream to receive the marker "
+                         f"stream '{STREAM_NAME}'...\n\nIn brAInStream: "
                          "connect the devices (the LSL streams device "
                          "listens for it), "
                          "then press Record.\n\n(Space to go on anyway.)")
@@ -391,7 +391,7 @@ def main(argv=None) -> int:
              "faces: look at each cross, and keep looking there when the "
              "face appears.\n\n"
              "Please sit still and relax your face and jaw.\n\n"
-             "Experimenter: make sure brAIn stream is recording.\n\n"
+             "Experimenter: make sure brAInStream is recording.\n\n"
              "Press space to begin.")
 
         # 2. Flashes
@@ -427,7 +427,7 @@ def main(argv=None) -> int:
             markers.send(f"calibration_manual reason={type(error).__name__}")
             show("The eye tracker's server could not be reached "
                  f"({args.gp3_host}:{args.gp3_port}).\n\nExperimenter: "
-                 "calibrate the GP3 in brAIn stream now (GP3 page, "
+                 "calibrate the GP3 in brAInStream now (GP3 page, "
                  "Calibrate), then press space here.")
             markers.send("calibration_end")
 
@@ -478,7 +478,7 @@ def main(argv=None) -> int:
              "the eye tracker, the screen recording, the camera and the "
              "experiment's events are recorded correctly and in time with "
              "each other.\n\n"
-             "Experimenter: stop recording in brAIn stream, then press space.")
+             "Experimenter: stop recording in brAInStream, then press space.")
         markers.send("procedure_end")
         status = 0
     except Escaped:
@@ -499,7 +499,7 @@ class Escaped(KeyboardInterrupt):
 
 def _save_log(args, markers: Markers, rows) -> None:
     """The markers as sent, with their LSL times, and the trials: a check
-    on what brAIn stream received."""
+    on what brAInStream received."""
     folder = Path(__file__).resolve().parent / "data"
     folder.mkdir(exist_ok=True)
     stem = f"{args.participant or 'anonymous'}_{datetime.now():%Y%m%d_%H%M%S}"

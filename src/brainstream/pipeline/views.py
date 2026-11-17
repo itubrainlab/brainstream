@@ -1,4 +1,4 @@
-"""The nodes the device pages draw from: g.Pype nodes of brAIn stream's own.
+"""The nodes the device pages draw from: g.Pype nodes of brAInStream's own.
 
 - :class:`ViewFilter` filters the EEG channels with a filter that can be
   swapped while the pipeline runs, so a page's Filter and Notch boxes

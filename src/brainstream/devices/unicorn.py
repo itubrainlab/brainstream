@@ -414,7 +414,7 @@ class UnicornDevice(Device):
         kinds = [self._bids_type(i) for i in columns]
         count = {k: sum(1 for t, _ in kinds if t == k)
                  for k in ("EEG", "MISC", "TRIG", "ACCEL", "GYRO")}
-        software = [f"brAIn stream {__version__}", f"g.Pype {gp.__version__}"]
+        software = [f"brAInStream {__version__}", f"g.Pype {gp.__version__}"]
         if info.get("firmware_version"):
             software.append(f"firmware {info['firmware_version']}")
         write_json(path.with_name(path.name.replace("_eeg.bdf", "_eeg.json")), {

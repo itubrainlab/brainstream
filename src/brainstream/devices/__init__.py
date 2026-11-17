@@ -1,4 +1,4 @@
-"""The devices brAIn stream records, by type."""
+"""The devices brAInStream records, by type."""
 from __future__ import annotations
 
 from pathlib import Path

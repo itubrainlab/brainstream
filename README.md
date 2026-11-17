@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="src/brainstream/resources/brainstream.svg" alt="brAIn stream logo: the brAIn lab brain, streaming binary" width="160">
+  <img src="src/brainstream/resources/brainstream.svg" alt="brAInStream logo: the brAIn lab brain, streaming binary" width="160">
 </p>
 
-# brAIn stream
+# brAInStream
 
 Multi-device recording for the ITU brAIn lab, into a **BIDS** dataset, on
 Windows, macOS and Linux:
@@ -36,19 +36,20 @@ Get the package for your system from the
 
 | System | Package | Install |
 |---|---|---|
-| Windows 10 or 11, 64-bit | `brAInstream-<version>-windows-x86_64.zip` | Unpack it and double-click `install.cmd`; open brAIn stream from the Start menu. |
-| macOS 14 or later, Apple Silicon | `brAInstream-<version>-macos-arm64.dmg` | Drag **brAIn stream** to Applications. The first time, right-click it and choose **Open** (the app is not notarized). |
-| Linux x86_64, glibc 2.34+ (Ubuntu 22.04, Debian 12, Fedora 35 or later) | `brAInstream-<version>-linux-x86_64.tar.gz` | Unpack it and run `./install.sh`; open brAIn stream from the applications menu or run `brainstream`. |
+| Windows 10 or 11, 64-bit | `brAInStream-<version>-windows-x86_64.zip` | Unpack it and double-click `install.cmd`; open brAInStream from the Start menu. |
+| macOS 14 or later, Apple Silicon | `brAInStream-<version>-macos-arm64.dmg` | Drag **brAInStream** to Applications. The first time, right-click it and choose **Open** (the app is not notarized). |
+| Linux x86_64, glibc 2.34+ (Ubuntu 22.04, Debian 12, Fedora 35 or later) | `brAInStream-<version>-linux-x86_64.tar.gz` | Unpack it and run `./install.sh`; open brAInStream from the applications menu or run `brainstream`. |
 
-**Upgrading from brAIn dump** (the name until 0.5): install brAIn stream as
-above. Your settings and recent projects move over the first time it starts,
-and `.braindump` projects open as they are. The old app stays installed until
-you remove it: delete *brAIn dump* from Applications (macOS), run its
-`uninstall.cmd` (Windows) or `uninstall.sh` (Linux). On macOS, allow camera
-access once more for the new app.
+**Upgrading from brAIn stream (0.5.0) or brAIn dump (before 0.5)**:
+install brAInStream as above. Your settings and recent projects move over
+the first time it starts, and `.braindump` projects open as they are. The
+old app stays installed until you remove it: delete *brAIn stream* or *brAIn
+dump* from Applications (macOS), or run its `uninstall.cmd` (Windows) or
+`uninstall.sh` (Linux). On macOS, allow camera access once more for the new
+app.
 
 None needs administrator rights. **The first launch needs an internet
-connection:** the packages contain their own Python and brAIn stream, but not
+connection:** the packages contain their own Python and brAInStream, but not
 g.Pype or g.tec's Unicorn driver, which g.tec's licences do not allow to be
 bundled. The first launch downloads them and the other libraries from PyPI,
 at the versions the release was tested with.
@@ -64,7 +65,7 @@ python -m venv .venv && .venv/bin/pip install -e ".[test,shimmer]"
 ```
 
 `shimmer` installs pyshimmer (GPL-3.0), which the Shimmer3 GSR+ needs; the
-rest of brAIn stream does without it.
+rest of brAInStream does without it.
 
 - **Projects** (`<name>.brainstream`): the devices, each one's configuration
   (saved as you change it), the BIDS output folder, the default task and the
@@ -88,7 +89,7 @@ rest of brAIn stream does without it.
   distance feedback, calibration (5/9/13/16/25 points, full-screen targets
   here or on the tracker computer), validation (local), and a plot of the
   calibration quality. On this computer, the tracker is the GP3 (or GP3 HD)
-  or, when chosen, a webcam: brAIn stream never falls back to one by itself.
+  or, when chosen, a webcam: brAInStream never falls back to one by itself.
   A webcam's warning, or a remote OpenGP3's, shows on the page and goes
   into the recording's `TrackerSetup`.
 - **Polar H10** (Bluetooth LE, via bleak): the raw ECG at 130 Hz, optionally
@@ -148,7 +149,7 @@ how the grids line up is measured on top of it: every source keeps each
 sample's acquisition time (the amplifiers' corrected for Bluetooth bursts
 and the link's delay, which is also the time g.Pype places triggers by).
 A test sends a UDP trigger (placed by g.Pype) and an LSL marker (placed
-by brAIn stream) at the same instant and checks they land on the same EEG
+by brAInStream) at the same instant and checks they land on the same EEG
 sample.
 
 ## Validating a setup
@@ -182,9 +183,9 @@ Silicon Macs only.
 project's `.venv`; the Linux and Windows ones build on macOS or Linux):
 
 ```bash
-packaging/macos/build_app.sh          # dist/brAInstream-<version>-macos-arm64.dmg
-packaging/linux/build_linux.sh        # dist/brAInstream-<version>-linux-x86_64.tar.gz
-packaging/windows/build_windows.sh    # dist/brAInstream-<version>-windows-x86_64.zip
+packaging/macos/build_app.sh          # dist/brAInStream-<version>-macos-arm64.dmg
+packaging/linux/build_linux.sh        # dist/brAInStream-<version>-linux-x86_64.tar.gz
+packaging/windows/build_windows.sh    # dist/brAInStream-<version>-windows-x86_64.zip
 ```
 
 Every push and pull request runs the [Check](.github/workflows/check.yml)
@@ -200,7 +201,7 @@ simulated. It publishes only when all of them pass. To release: write `docs/rele
 
 ## Licence
 
-brAIn stream is MIT licensed; see [LICENSE](LICENSE). It runs on g.Pype, under
+brAInStream is MIT licensed; see [LICENSE](LICENSE). It runs on g.Pype, under
 the **g.tec Non-Commercial License**: free for academic research and teaching
 with a g.tec amplifier; read it before use. The Shimmer's driver, pyshimmer,
 is GPL-3.0 and optional.

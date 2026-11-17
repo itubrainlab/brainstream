@@ -74,7 +74,7 @@ def test_obs_over_ndi(tmp_path):
     if not ndi.initialize():
         pytest.skip("NDI does not start here")
     create = ndi.SendCreate()
-    create.ndi_name = "OBS brAIn stream test"
+    create.ndi_name = "OBS brAInStream test"
     sender = ndi.send_create(create)
     image = np.zeros((180, 320, 4), np.uint8)
     frame = ndi.VideoFrameV2()
@@ -92,7 +92,7 @@ def test_obs_over_ndi(tmp_path):
             time.sleep(1 / 25)
     threading.Thread(target=pump, daemon=True).start()
     project = Project.create(tmp_path / "p", "P")
-    project.add_device("obs", {"source": "OBS brAIn stream test"})
+    project.add_device("obs", {"source": "OBS brAInStream test"})
     obs = make_device("obs", project.devices["obs"], project.folder)
     try:
         try:

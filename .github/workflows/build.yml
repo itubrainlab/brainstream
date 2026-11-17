@@ -70,8 +70,8 @@ jobs:
         run: |
           export HOME="$RUNNER_TEMP/home"
           mkdir -p "$HOME" "$RUNNER_TEMP/pkg"
-          tar -xzf dist/brAInstream-*-linux-x86_64.tar.gz -C "$RUNNER_TEMP/pkg"
-          "$RUNNER_TEMP"/pkg/brAInstream-*/install.sh
+          tar -xzf dist/brAInStream-*-linux-x86_64.tar.gz -C "$RUNNER_TEMP/pkg"
+          "$RUNNER_TEMP"/pkg/brAInStream-*/install.sh
           APP="$HOME/.local/share/brainstream/app"
           "$HOME/.local/bin/brainstream" --version
           "$APP/python/bin/python3" -I packaging/smoke_test.py \
@@ -127,16 +127,16 @@ jobs:
           $pkg = (Get-ChildItem $env:RUNNER_TEMP\pkg -Directory)[0].FullName
           powershell.exe -NoProfile -ExecutionPolicy Bypass -File "$pkg\install.ps1"
           if ($LASTEXITCODE -ne 0) { throw 'install.ps1 failed' }
-          $app = "$env:LOCALAPPDATA\brAIn stream\app"
-          if (-not (Test-Path "$([Environment]::GetFolderPath('Programs'))\brAIn stream.lnk")) { throw 'no Start menu shortcut' }
+          $app = "$env:LOCALAPPDATA\brAInStream\app"
+          if (-not (Test-Path "$([Environment]::GetFolderPath('Programs'))\brAInStream.lnk")) { throw 'no Start menu shortcut' }
           $build = (Get-Content "$app\build-id" -Raw).Trim()
           $version = $build.Split('-')[0]
           & "$app\python\python.exe" -I "$app\launcher.py" --version
           if ($LASTEXITCODE -ne 0) { throw 'launcher failed' }
-          & "$app\python\python.exe" -I packaging\smoke_test.py "$env:LOCALAPPDATA\brAIn stream\runtime\$build" $version
+          & "$app\python\python.exe" -I packaging\smoke_test.py "$env:LOCALAPPDATA\brAInStream\runtime\$build" $version
           if ($LASTEXITCODE -ne 0) { throw 'smoke test failed' }
           powershell.exe -NoProfile -ExecutionPolicy Bypass -File "$pkg\uninstall.ps1"
-          if (Test-Path "$env:LOCALAPPDATA\brAIn stream") { throw 'uninstall left files' }
+          if (Test-Path "$env:LOCALAPPDATA\brAInStream") { throw 'uninstall left files' }
 
   macos:
     name: Build and check the macOS app
@@ -157,11 +157,11 @@ jobs:
         run: packaging/macos/build_app.sh
       - name: Check the app
         run: |
-          APP="dist/brAIn stream.app"
+          APP="dist/brAInStream.app"
           RES="$APP/Contents/Resources"
           "$APP/Contents/MacOS/brainstream" --version
           "$RES/python/bin/python3" -I -B packaging/smoke_test.py \
-            "$HOME/Library/Application Support/brAIn stream/runtime/$(cat "$RES/build-id")" \
+            "$HOME/Library/Application Support/brAInStream/runtime/$(cat "$RES/build-id")" \
             "$(.venv/bin/python -c 'import brainstream; print(brainstream.__version__)')"
       - uses: actions/upload-artifact@v4
         with:
@@ -190,14 +190,14 @@ jobs:
         run: |
           NOTES="docs/releases/$TAG.md"
           cd dist
-          sha256sum brAInstream-* > SHA256SUMS
+          sha256sum brAInStream-* > SHA256SUMS
           cat SHA256SUMS
           if gh release view "$TAG" >/dev/null 2>&1; then
-            gh release upload "$TAG" --clobber brAInstream-* SHA256SUMS
+            gh release upload "$TAG" --clobber brAInStream-* SHA256SUMS
           elif [ -f "../$NOTES" ]; then
-            gh release create "$TAG" --verify-tag --title "brAIn stream ${TAG#v}" \
-              --notes-file "../$NOTES" brAInstream-* SHA256SUMS
+            gh release create "$TAG" --verify-tag --title "brAInStream ${TAG#v}" \
+              --notes-file "../$NOTES" brAInStream-* SHA256SUMS
           else
-            gh release create "$TAG" --verify-tag --title "brAIn stream ${TAG#v}" \
-              --generate-notes brAInstream-* SHA256SUMS
+            gh release create "$TAG" --verify-tag --title "brAInStream ${TAG#v}" \
+              --generate-notes brAInStream-* SHA256SUMS
           fi

@@ -3,7 +3,7 @@ own time measured, so events and recordings line up.
 
 The end-to-end test sends a UDP trigger and an LSL marker at the same
 instant: g.Pype places the trigger on the EEG sample acquired then, by
-the headset's acquisition stamps; brAIn stream places the marker by its own
+the headset's acquisition stamps; brAInStream places the marker by its own
 clock and the EEG timeline it fitted. They must land on the same sample.
 """
 import json

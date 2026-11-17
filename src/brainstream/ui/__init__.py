@@ -1,1 +1,1 @@
-"""brAIn stream's PySide6 interface."""
+"""brAInStream's PySide6 interface."""

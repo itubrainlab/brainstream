@@ -122,7 +122,7 @@ EVENT_COLUMNS = ["onset", "duration", "trial_type", "blink", "message"]
 class EyetrackWriter(BidsWriter):
     """Writes the BIDS eye-tracking files while a recording is open: one
     physio file per eye, one with every GP3 channel, and the fixations
-    and blinks as physioevents. A g.Pype writer of brAIn stream's
+    and blinks as physioevents. A g.Pype writer of brAInStream's
     (:class:`~brainstream.pipeline.writers.BidsWriter`): the session begins
     and ends it, at a sample, with its ``begin`` and ``end`` actions;
     ``meta`` gives the source's epoch and the screen's size in pixels."""
@@ -415,7 +415,7 @@ class GP3Device(Device):
         cal = self.calibrations[-1] if self.calibrations else \
             self.last_calibration
         val = self.validations[-1] if self.validations else None
-        software = [f"brAIn stream {__version__}", f"g.Pype {gp.__version__}"]
+        software = [f"brAInStream {__version__}", f"g.Pype {gp.__version__}"]
         if info.get("software"):
             software.append(info["software"])
         model = info.get("model") or self.MODEL

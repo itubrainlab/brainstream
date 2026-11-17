@@ -1,4 +1,4 @@
-"""Start brAIn stream.
+"""Start brAInStream.
 
     brainstream                         choose a project, then record
     brainstream --project study.brainstream

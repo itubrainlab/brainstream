@@ -2,7 +2,7 @@
 
 Each configured stream is matched by name, type, and/or source id (an
 empty field matches anything), and found on the network whenever it
-appears: a stimulus program may start after brAIn stream. Every sample a
+appears: a stimulus program may start after brAInStream. Every sample a
 stream sends while recording becomes an event: onset from the sample's
 LSL time stamp (corrected for the sender's clock, then moved onto this
 computer's clock), ``trial_type`` the stream's name, ``value`` the
@@ -16,9 +16,9 @@ The samples enter the session pipeline through a :class:`MarkerSource`::
 g.Pype's own LslReceiver does not fit marker streams: g.Pype carries
 float32, and markers are usually strings; it drops LSL's time stamps; and
 it gives up when a stream is not on the network within seconds, while a
-stimulus program may start long after brAIn stream. So the streams are
+stimulus program may start long after brAInStream. So the streams are
 pulled with pylsl, and each sample enters the pipeline as a row: its time
-on brAIn stream's clock, and a code standing for its stream and text
+on brAInStream's clock, and a code standing for its stream and text
 (:attr:`LslDevice.codes`).
 """
 from __future__ import annotations
@@ -41,7 +41,7 @@ from .base import (IDLE, RUNNING, STARTING, STOPPING, Device, DeviceConfig,
 RESOLVE_EVERY_S = 2.0
 #: How often a stream's clock offset is measured again, in seconds.
 CLOCK_EVERY_S = 5.0
-SIMULATED_STREAM = "brAIn stream test markers"
+SIMULATED_STREAM = "brAInStream test markers"
 
 
 @dataclass
@@ -221,10 +221,10 @@ class LslDevice(Device):
     # -- clocks ------------------------------------------------------------
 
     def clock_offset(self) -> float:
-        """brAIn stream's clock minus LSL's. Both are steady (LSL reads the
+        """brAInStream's clock minus LSL's. Both are steady (LSL reads the
         system's monotonic clock), so the difference holds; it is still
         measured again every few seconds, between two readings of
-        brAIn stream's clock, to stay within a few microseconds."""
+        brAInStream's clock, to stay within a few microseconds."""
         import pylsl
         now = time.monotonic()
         if now - self._offset_at > CLOCK_EVERY_S:

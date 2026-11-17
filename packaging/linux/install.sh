@@ -1,5 +1,5 @@
 #!/bin/sh
-# Install brAIn stream for the current user: copies this folder to
+# Install brAInStream for the current user: copies this folder to
 # ~/.local/share/brainstream/app, adds a menu entry with its icon and a
 # brainstream command in ~/.local/bin, then sets it up (downloads g.Pype and
 # the libraries from PyPI). No administrator rights needed.
@@ -12,18 +12,18 @@ BIN="$HOME/.local/bin"
 
 case "$(uname -m)" in
     x86_64|amd64) ;;
-    *) echo "brAIn stream needs an x86_64 PC (g.Pype has no build for $(uname -m))." >&2
+    *) echo "brAInStream needs an x86_64 PC (g.Pype has no build for $(uname -m))." >&2
        exit 1 ;;
 esac
 glibc="$(ldd --version 2>/dev/null | head -1 | grep -o '[0-9]\+\.[0-9]\+$' || true)"
 if [ -n "$glibc" ] && [ "$(printf '%s\n2.34\n' "$glibc" | sort -V | head -1)" != "2.34" ]; then
-    echo "brAIn stream needs glibc 2.34 or newer (this system has $glibc)," >&2
+    echo "brAInStream needs glibc 2.34 or newer (this system has $glibc)," >&2
     echo "e.g. Ubuntu 22.04, Debian 12, Fedora 35 or later." >&2
     exit 1
 fi
 
 if [ "$HERE" != "$APP" ]; then
-    echo "Copying brAIn stream to $APP"
+    echo "Copying brAInStream to $APP"
     rm -rf "$APP"
     mkdir -p "$APP"
     cp -a "$HERE/." "$APP/"
@@ -37,7 +37,7 @@ cp "$APP/brainstream.png" "$DATA/icons/hicolor/256x256/apps/brainstream.png"
 cat > "$DATA/applications/brainstream.desktop" <<DESKTOP
 [Desktop Entry]
 Type=Application
-Name=brAIn stream
+Name=brAInStream
 GenericName=Multi-device Recorder
 Comment=Record EEG, eye tracking, ECG, GSR and LSL streams into BIDS
 Exec="$APP/brainstream" %U
@@ -55,5 +55,5 @@ build="$(cat "$APP/build-id")"
     "$DATA/brainstream/runtime/$build"
 
 echo
-echo "brAIn stream is installed: open it from your applications menu, or"
+echo "brAInStream is installed: open it from your applications menu, or"
 echo "run brainstream (add ~/.local/bin to PATH if the shell cannot find it)."

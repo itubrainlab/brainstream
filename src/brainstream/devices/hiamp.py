@@ -69,7 +69,7 @@ def _field(entry: dict, *words: str, default=None):
 
 
 def amplifier_filter(entry: dict, kind: str) -> dict:
-    """One of the driver's filters, as brAIn stream keeps it: its index,
+    """One of the driver's filters, as brAInStream keeps it: its index,
     cut-offs (0 for none), order and type."""
     index = _field(entry, kind, "index")
     if index is None:
@@ -712,7 +712,7 @@ class HIampDevice(Device):
             "Manufacturer": self.MANUFACTURER,
             "ManufacturersModelName": self.MODEL,
             "DeviceSerialNumber": self.identity() or NA,
-            "SoftwareVersions": f"brAIn stream {__version__}, "
+            "SoftwareVersions": f"brAInStream {__version__}, "
                                 f"g.Pype {gp.__version__}",
             "EEGChannelCount": count["EEG"],
             "EOGChannelCount": count["EOG"],

@@ -2,7 +2,7 @@
 # bundled wheels and the pinned requirements. Source it after setting
 # ROOT, WORK and DEV_PY.
 #
-# The packages bundle brAIn stream's wheel and that of its lab library,
+# The packages bundle brAInStream's wheel and that of its lab library,
 # OpenGP3 (MIT), which it depends on by git URL: installing it from git
 # would need git on every computer.
 # Everything else, g.Pype and g.tec's gtec-unicorn driver among it, is
@@ -35,7 +35,7 @@ build_wheels() {
     done <<< "$GIT_DEPS"
 }
 
-# requirements.txt for a platform: brAIn stream's and its lab libraries'
+# requirements.txt for a platform: brAInStream's and its lab libraries'
 # dependencies from PyPI, at the versions the tests ran with.
 pin_requirements() {
     local platform="$1"

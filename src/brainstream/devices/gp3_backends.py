@@ -59,7 +59,7 @@ def nominal_rate(model: str, hd_rate: float = HD_RATES[0],
 
 
 def model_name(model: str) -> str:
-    """brAIn stream's name for the tracker OpenGP3 calls ``model`` (``GP3``,
+    """brAInStream's name for the tracker OpenGP3 calls ``model`` (``GP3``,
     ``GP3 HD``, ``WEBCAM``, ``Simulated GP3``) or the Open Gaze API's
     ``PRODUCT_ID`` names (``GP3``, ``GP3HD``, ``WEBCAM``)."""
     text = (model or "").upper()

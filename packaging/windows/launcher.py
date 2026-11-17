@@ -1,12 +1,12 @@
-"""Start brAIn stream from its unpacked (or installed) folder, Windows.
+"""Start brAInStream from its unpacked (or installed) folder, Windows.
 
     pythonw.exe -I launcher.py [brainstream options]
 
-The folder carries its own Python and the wheels of brAIn stream and
+The folder carries its own Python and the wheels of brAInStream and
 OpenGP3, but not g.Pype or g.tec's gtec-unicorn driver: their
 licences do not allow them in a bundle. On first launch, and after an
 update, bootstrap.py installs them and the other libraries from PyPI into
-%LOCALAPPDATA%\\brAIn stream\\runtime.
+%LOCALAPPDATA%\\brAInStream\\runtime.
 """
 import os
 import subprocess
@@ -16,7 +16,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 BUILD = (HERE / "build-id").read_text().strip()
 LIB = (Path(os.environ.get("LOCALAPPDATA") or Path.home() / "AppData" / "Local")
-       / "brAIn stream" / "runtime" / BUILD)
+       / "brAInStream" / "runtime" / BUILD)
 
 if not (LIB / ".complete").exists():
     setup = subprocess.run([sys.executable, "-I", str(HERE / "bootstrap.py"),

@@ -49,7 +49,7 @@ class CalibrationWindow(QWidget):
                  mirror: bool = True, wait_for_start: bool = True):
         super().__init__(None, Qt.WindowType.FramelessWindowHint
                          | Qt.WindowType.WindowStaysOnTopHint)
-        self.setWindowTitle("brAIn stream calibration")
+        self.setWindowTitle("brAInStream calibration")
         self.setCursor(Qt.CursorShape.BlankCursor)
         self.driver = driver
         self.eye_view = eye_view

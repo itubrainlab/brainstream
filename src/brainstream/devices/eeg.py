@@ -1,4 +1,4 @@
-"""What brAIn stream's EEG amplifiers share: the recording filter's
+"""What brAInStream's EEG amplifiers share: the recording filter's
 description, and the measurement of a recording's timing. (Their BIDS BDF
 writer is :class:`brainstream.pipeline.BdfWriter`.)"""
 from __future__ import annotations

@@ -19,7 +19,7 @@ from . import __version__
 from .paths import config_dir
 
 EXTENSION = ".brainstream"
-#: What projects were called before brAIn stream was renamed (from brAIn
+#: What projects were called before brAInStream was renamed (from brAIn
 #: dump): they open as they are.
 OLD_EXTENSIONS = (".braindump",)
 #: Recent projects remembered for the start dialog.
@@ -98,7 +98,7 @@ class Project:
         data = asdict(self)
         data.pop("path")
         data["format"] = 1
-        data["saved_by"] = f"brAIn stream {__version__}"
+        data["saved_by"] = f"brAInStream {__version__}"
         tmp = self.path.with_suffix(self.path.suffix + ".tmp")
         tmp.write_text(json.dumps(data, indent=2, ensure_ascii=False),
                        encoding="utf-8")

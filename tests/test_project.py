@@ -59,20 +59,25 @@ def test_registry():
     assert UnicornConfig.from_dict(saved) == UnicornConfig()
 
 
-def test_settings_from_before_the_rename_are_kept(tmp_path, monkeypatch):
-    """brAIn stream was brAIn dump: its settings folder is moved to the new
-    name the first time, and BRAINDUMP_HOME still works."""
+@pytest.mark.parametrize("old_name, old_unix", [
+    ("brAIn dump", "braindump"), ("brAIn stream", "brainstream")])
+def test_settings_from_before_the_rename_are_kept(tmp_path, monkeypatch,
+                                                  old_name, old_unix):
+    """brAInStream was brAIn stream (0.5.0) and brAIn dump: their settings
+    folder is moved to the new name the first time, and BRAINDUMP_HOME
+    still works."""
     from brainstream import paths
     monkeypatch.delenv("BRAINSTREAM_HOME", raising=False)
     monkeypatch.setenv("HOME", str(tmp_path))
     monkeypatch.setenv("APPDATA", str(tmp_path / "AppData"))
     monkeypatch.setenv("XDG_CONFIG_HOME", str(tmp_path / ".config"))
-    old = paths._system_dir("brAIn dump", "braindump")
+    old = paths._system_dir(old_name, old_unix)
     old.mkdir(parents=True)
     (old / "recent.json").write_text("[]")
     new = paths.config_dir()
-    assert new == paths._system_dir("brAIn stream", "brainstream")
-    assert (new / "recent.json").read_text() == "[]" and not old.exists()
+    assert new == paths._system_dir("brAInStream", "brainstream")
+    assert (new / "recent.json").read_text() == "[]"
+    assert new == old or not old.exists()
     monkeypatch.setenv("BRAINDUMP_HOME", str(tmp_path / "custom"))
     assert paths.config_dir() == tmp_path / "custom"
 

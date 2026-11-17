@@ -5,7 +5,7 @@ import pytest
 
 @pytest.fixture(autouse=True)
 def _home(tmp_path, monkeypatch):
-    """Keep brAIn stream's own settings out of the user's."""
+    """Keep brAInStream's own settings out of the user's."""
     monkeypatch.setenv("BRAINSTREAM_HOME", str(tmp_path / "home"))
     os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 

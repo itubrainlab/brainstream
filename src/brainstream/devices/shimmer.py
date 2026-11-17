@@ -435,7 +435,7 @@ class ShimmerDevice(Device):
 
     def _write_sidecar(self, target, path, first, last, info, reference):
         cfg = self.config
-        software = [f"brAIn stream {__version__}", f"g.Pype {gp.__version__}"]
+        software = [f"brAInStream {__version__}", f"g.Pype {gp.__version__}"]
         if info.get("firmware"):
             software.append(f"Shimmer firmware {info['firmware']}")
         start = start_time(reference, first)

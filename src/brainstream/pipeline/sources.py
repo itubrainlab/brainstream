@@ -1,4 +1,4 @@
-"""brAIn stream's g.Pype sources: what every input device feeds into the
+"""brAInStream's g.Pype sources: what every input device feeds into the
 session pipeline.
 
 - **Amplifiers** (Unicorn, g.HIamp) are g.Pype's own sources, with
@@ -8,7 +8,7 @@ session pipeline.
   video) is a :class:`PushSource`: the device's own thread pushes rows,
   one at a time, as g.Pype's LslReceiver does with its stream. The first
   channel of every row is the time the device says the row was acquired,
-  on brAIn stream's clock (:mod:`brainstream.clock`).
+  on brAInStream's clock (:mod:`brainstream.clock`).
 
 g.Pype gives each stream its own sample grid. How the grids line up --
 which EEG sample a gaze sample or a marker happened during -- is measured
@@ -96,7 +96,7 @@ class PushSource(Source):
 
 
 class ClockMap:
-    """A device's own time stamps onto brAIn stream's clock.
+    """A device's own time stamps onto brAInStream's clock.
 
     Each reading arrives some delay after it was stamped: never less than
     the link's fastest, often more (Bluetooth bursts, scheduling). So the
@@ -134,7 +134,7 @@ class ClockMap:
 
 
 class AcquisitionStamps:
-    """Keeps every scan's acquisition time, on brAIn stream's clock, for an
+    """Keeps every scan's acquisition time, on brAInStream's clock, for an
     amplifier source g.Pype stamps.
 
     g.Pype's amplifier sources append the time each frame reached this

@@ -85,7 +85,7 @@ class NewProjectDialog(QDialog):
         form = QFormLayout()
         self.name = QLineEdit()
         self.name.setPlaceholderText("e.g. Uncanny faces EEG")
-        self.location = FolderField(str(Path.home() / "brAIn stream"),
+        self.location = FolderField(str(Path.home() / "brAInStream"),
                                     "Where the project folder goes")
         self.output = FolderField("", "BIDS dataset folder")
         self.output.edit.setPlaceholderText(
@@ -151,7 +151,7 @@ class NewProjectDialog(QDialog):
 
 
 class StartDialog(QDialog):
-    """What brAIn stream opens with: pick the project to record for."""
+    """What brAInStream opens with: pick the project to record for."""
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -247,7 +247,7 @@ class StartDialog(QDialog):
     def _browse(self):
         path, _ = QFileDialog.getOpenFileName(
             self, "Open project", str(Path.home()),
-            "brAIn stream projects (" + " ".join(
+            "brAInStream projects (" + " ".join(
                 f"*{e}" for e in (proj.EXTENSION, *proj.OLD_EXTENSIONS))
             + ")")
         if path:

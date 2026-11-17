@@ -1,6 +1,6 @@
 """Writing a BIDS dataset (https://bids-specification.readthedocs.io).
 
-The layout brAIn stream writes, for one recording of every device::
+The layout brAInStream writes, for one recording of every device::
 
     <root>/
       dataset_description.json  README  participants.tsv  participants.json

@@ -58,7 +58,7 @@ def test_port_choice(monkeypatch):
 
 
 def test_link_with_a_fake_unit(monkeypatch):
-    """The calls brAIn stream makes on pyshimmer, and what it does with the
+    """The calls brAInStream makes on pyshimmer, and what it does with the
     packets."""
     pyshimmer = pytest.importorskip("pyshimmer")
     from pyshimmer import EChannelType
