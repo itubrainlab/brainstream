@@ -11,7 +11,7 @@ license = "MIT"
 license-files = ["LICENSE"]
 requires-python = ">=3.10"
 dependencies = [
-    "numpy>=1.24",
+    "numpy>=2.2",
     "scipy>=1.10",
     "gpype[gui,lsl,formats]>=4.2,<5",
     # g.tec's driver for the Unicorn, which g.Pype's HybridBlack opens.
