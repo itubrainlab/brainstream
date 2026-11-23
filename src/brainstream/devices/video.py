@@ -712,6 +712,8 @@ class WebcamConfig(VideoConfig):
     width: int = 1280
     height: int = 720
     fps: float = 30.0
+    #: The camera's delay (exposure and transfer), measured in the lab.
+    latency_ms: float = 100.0
 
 
 class WebcamDevice(VideoDevice):
@@ -741,6 +743,8 @@ class ObsConfig(VideoConfig):
     #: The NDI source's name, or part of it (e.g. "OBS"); empty takes the
     #: first source whose name says OBS.
     source: str = ""
+    #: OBS's screen-to-NDI delay, measured with the validation procedure.
+    latency_ms: float = 50.0
 
 
 class ObsDevice(VideoDevice):
