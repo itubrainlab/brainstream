@@ -124,7 +124,8 @@ and the eye tracker's delays uneven.
 ### Stimulus computer
 
 1. **A virtual environment** for the procedure's Python packages, in a
-   folder of your choice:
+   folder of your choice. Use Python 3.10, 3.11 or 3.12: PsychoPy doesn't
+   install on newer versions yet (see step 3).
 
    ```bash
    python -m venv validation-env
@@ -143,10 +144,13 @@ and the eye tracker's delays uneven.
 3. **PsychoPy and pylsl**, in the same environment:
 
    ```bash
-   pip install psychopy pylsl
+   pip install "psychopy>=2025.1" pylsl
    ```
 
-   Check PsychoPy's documentation for the Python versions it supports. The
+   The version matters. On a Python PsychoPy doesn't support, pip falls
+   back to PsychoPy 2023.1, which needs numpy older than 1.24 and clashes
+   with brAInStream's numpy 2. With the version given, pip stops with an
+   error instead. The
    [standalone PsychoPy](https://www.psychopy.org/download.html) also
    works: it includes pylsl, and runs the procedure with its own Python.
 4. **The procedure.** Copy `validation/face_validation.py` onto this
