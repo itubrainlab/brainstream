@@ -115,8 +115,13 @@ Activate the environment again in every new terminal. Then install PsychoPy
 and pylsl:
 
 ```bash
-pip install psychopy pylsl
+pip install "psychopy>=2025.1" pylsl
 ```
+
+PsychoPy needs Python 3.10, 3.11 or 3.12. On a newer Python, pip would fall
+back to PsychoPy 2023.1, which needs numpy older than 1.24 and clashes with
+brAInStream's numpy 2; with the version given, it stops with an error
+instead.
 
 The [standalone PsychoPy](https://www.psychopy.org/download.html) also
 works: it includes pylsl.
