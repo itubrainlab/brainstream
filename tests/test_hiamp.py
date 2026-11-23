@@ -82,3 +82,22 @@ def test_two_eeg_amplifiers_get_their_own_acq(tmp_path):
     for acq in ("unicorn", "hiamp"):
         assert (eeg / f"sub-01_task-rest_acq-{acq}_eeg.bdf").exists()
         assert (eeg / f"sub-01_task-rest_acq-{acq}_eeg.json").exists()
+
+
+@pytest.mark.parametrize("platform, hinted", [("win32", True),
+                                              ("darwin", False)])
+def test_failed_connection_suggests_restarting_the_service_on_windows(
+        tmp_path, monkeypatch, platform, hinted):
+    from brainstream.devices import hiamp
+
+    def unreachable(*args, **kwargs):
+        raise RuntimeError("No g.HIamp found")
+    monkeypatch.setattr(hiamp, "StampedGHIamp", unreachable)
+    monkeypatch.setattr(hiamp.sys, "platform", platform)
+    project = Project.create(tmp_path / "p", "P")
+    project.add_device("hiamp", {"simulate": False})
+    amp = make_device("hiamp", project.devices["hiamp"], project.folder)
+    with pytest.raises(RuntimeError) as failed:
+        amp._open()
+    assert "No g.HIamp found" in str(failed.value)
+    assert ("services.msc" in str(failed.value)) == hinted

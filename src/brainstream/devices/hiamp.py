@@ -54,6 +54,13 @@ SIMULATED_SERIAL = "HA-SIMULATED"
 SIMULATED_CHANNELS = 64
 #: No amplifier filter (the driver's index for none).
 NO_FILTER = -1
+#: Added to a failed connection on Windows, where g.tec's device service
+#: (which g.Pype asks for the amplifier) sometimes stops answering.
+WINDOWS_SERVICE_HINT = (
+    "If the amplifier is switched on and plugged in, g.tec's device "
+    "service may have stopped answering. Restart it: press Win+R, type "
+    "services.msc, find g.tec's device service in the list, right-click "
+    "it and choose Restart. Then connect again.")
 #: The BIDS types a channel other than EEG may have.
 CHANNEL_TYPES = ("EOG", "ECG", "EMG", "MISC")
 
@@ -549,13 +556,19 @@ class HIampDevice(Device):
         cfg = self.config
         cls = SimulatedGHIamp if self.simulated else StampedGHIamp
         rate = int(cfg.sampling_rate)
-        return cls(serial=cfg.serial or None, sampling_rate=rate,
-                   channel_selection=(range(int(cfg.channel_count))
-                                      if cfg.channel_count else None),
-                   frame_size=RATES.get(rate),
-                   enable_di=bool(cfg.digital_input),
-                   latency_ms=cfg.latency_ms,
-                   name=self.node_name("source"), **filters)
+        try:
+            return cls(serial=cfg.serial or None, sampling_rate=rate,
+                       channel_selection=(range(int(cfg.channel_count))
+                                          if cfg.channel_count else None),
+                       frame_size=RATES.get(rate),
+                       enable_di=bool(cfg.digital_input),
+                       latency_ms=cfg.latency_ms,
+                       name=self.node_name("source"), **filters)
+        except Exception as error:
+            if self.simulated or sys.platform != "win32":
+                raise
+            raise RuntimeError(f"{error}\n\n{WINDOWS_SERVICE_HINT}") \
+                from error
 
     def load_filters(self) -> dict[str, list[dict]]:
         """Asks the amplifier which filters it offers at the sampling
