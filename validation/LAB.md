@@ -14,6 +14,26 @@ session with any participant (about 15 minutes) checks five things:
 PsychoPy runs the whole procedure, including the eye tracker's calibration.
 The analysis then gives each check PASS or FAIL.
 
+### Why validate
+
+brAInStream records several streams at the same time, from different
+devices on two computers: the EEG, the eye tracker, the screen, the camera
+and the experiment's markers. Each device has its own clock and its own
+delay (USB, Bluetooth, the network, OBS's rendering), and brAInStream puts
+them all on one timeline. A study can only compare them (a fixation with
+the EEG it evoked, a face on the screen with the gaze that found it) if
+that timeline is right.
+
+The validation shows two things with a real participant:
+
+- **each signal is good on its own:** the EEG shows alpha and an N170, the
+  eye tracker is accurate;
+- **the streams are in step with each other:** the same moment (a flash, a
+  jump of the eyes, a face) lands at the same time in every recording.
+
+Run it when the booth is set up, and again whenever a device, a computer,
+a driver or OBS's settings change.
+
 ## The setup
 
 ```
@@ -45,11 +65,18 @@ and the eye tracker's delays uneven.
 
 ### Recording computer
 
-1. **brAInStream from source**, with the analysis's figures:
+1. **brAInStream from source**, in its own virtual environment, with the
+   analysis's figures. From the repository's folder:
 
    ```bash
+   python -m venv .venv
+   .venv\Scripts\activate          # Windows
+   source .venv/bin/activate       # macOS and Linux
    pip install -e ".[validation]"
    ```
+
+   Activate the environment again (the second line) in every new terminal
+   before running brAInStream or the scripts below.
 
 2. **g.tec's driver.** brAInStream installs gtec-gds. On Windows, also
    install g.tec's g.HIamp driver (g.NEEDaccess).
@@ -96,25 +123,62 @@ and the eye tracker's delays uneven.
 
 ### Stimulus computer
 
-1. **OpenGP3** for the GP3 HD:
+1. **A virtual environment** for the procedure's Python packages, in a
+   folder of your choice:
+
+   ```bash
+   python -m venv validation-env
+   validation-env\Scripts\activate          # Windows
+   source validation-env/bin/activate       # macOS and Linux
+   ```
+
+   Activate it again in every new terminal on this computer.
+2. **OpenGP3** for the GP3 HD, in that environment:
 
    ```bash
    pip install "opengp3 @ git+https://github.com/itubrainlab/opengp3@v0.5.0"
    ```
 
    (On Windows, install UsbDk once; see OpenGP3's README.)
-2. **[PsychoPy](https://www.psychopy.org/download.html)**, standalone. It
-   includes pylsl. Copy `validation/face_validation.py` onto this computer,
-   with a folder of **at least 30 face photographs**. The lab's set is in
-   the uncanny-face-questionnaire study; this repository doesn't include
-   them.
-3. **OBS** with the [DistroAV](https://github.com/DistroAV/DistroAV)
-   plugin:
-   - capture the participant's screen (Display Capture);
-   - in **Settings → Video**, give the canvas the screen's shape (e.g.
-     1920×1080), and fit the capture to it (Edit → Transform → Fit to
-     screen);
-   - turn on **Tools → NDI Output Settings → Main Output**.
+3. **PsychoPy and pylsl**, in the same environment:
+
+   ```bash
+   pip install psychopy pylsl
+   ```
+
+   Check PsychoPy's documentation for the Python versions it supports. The
+   [standalone PsychoPy](https://www.psychopy.org/download.html) also
+   works: it includes pylsl, and runs the procedure with its own Python.
+4. **The procedure.** Copy `validation/face_validation.py` onto this
+   computer, with a folder of **at least 30 face photographs**. The lab's
+   set is in the uncanny-face-questionnaire study; this repository doesn't
+   include them.
+5. **OBS**, which sends the participant's screen to brAInStream:
+   1. Install [OBS Studio](https://obsproject.com) and the
+      [DistroAV](https://github.com/DistroAV/DistroAV) plugin. DistroAV also
+      needs the NDI Runtime; its README says where to get it. Restart OBS
+      afterwards.
+   2. In a scene, add a **Display Capture** source and choose the
+      participant's screen (the one the procedure runs on).
+   3. In **Settings → Video**, set both the **Base (Canvas)** and the
+      **Output (Scaled)** resolution to the screen's own resolution (e.g.
+      1920×1080), so the canvas has the screen's shape. A canvas of another
+      shape makes OBS scale every frame, which adds delay: in the first
+      session it made the screen recording 391 ms late instead of about
+      40 ms.
+   4. Select the source and choose **Edit → Transform → Fit to screen**, so
+      the whole screen fills the canvas.
+   5. Turn on **Tools → NDI Output Settings → Main Output**. Its name is
+      the NDI source brAInStream's Screen Capture looks for (by default,
+      the first one with "OBS" in its name).
+   6. On the recording computer, connect the Screen Capture in brAInStream:
+      it should show the participant's screen. If it finds no source, check
+      that both computers are on the same wired network and that the
+      firewalls let NDI through.
+
+   The Screen Capture's **Delay** (Settings) is taken off the screen
+   recording's time stamps. It defaults to 50 ms, measured on the lab's
+   setup; the report says when to change it.
 
 ### The camera
 
@@ -140,22 +204,29 @@ gaze instead.
 
 ## A session
 
+The eye tracker's server and the procedure both keep running until the
+end, so each gets its own terminal. On the stimulus computer, open two
+terminals and activate the virtual environment in both (or use separate
+tabs or panes in one terminal app).
+
 On the **stimulus computer**:
 
-1. Start the eye tracker's server, on the participant's screen (display
-   0 here):
+1. In the **first terminal**, start the eye tracker's server on the
+   participant's screen (display 1 on the lab's stimulus computer):
 
    ```bash
-   opengp3 server --display 0
+   opengp3 server --display 1
    ```
 
+   Leave it running.
 2. Start OBS, and check its NDI output is on.
 
 On the **recording computer**:
 
 3. Start brAInStream and open the lab-validation project.
-4. Fit the cap and the EOG electrodes. Connect the g.HIamp: every channel
-   in the data viewer should show clean EEG, without drift or 50 Hz.
+4. Fit the EEG headset (the g.HIamp's 64-channel cap) and the EOG
+   electrodes. Connect the g.HIamp: every channel in the data viewer should
+   show clean EEG, without drift or 50 Hz.
 5. **Connect all** (the plug button).
    - **GP3 page:** the eye view shows both eyes and the distance bar is
      green. Seat the participant about 65 cm from the screen.
@@ -164,8 +235,9 @@ On the **recording computer**:
 
 On the **stimulus computer**:
 
-6. Start the procedure with PsychoPy's Python, from a terminal (or open it in
-   PsychoPy's Coder and Run):
+6. In the **second terminal**, start the procedure (with the standalone
+   PsychoPy, use its Python, or open the script in PsychoPy's Coder and
+   Run):
 
    ```bash
    python face_validation.py --faces <faces folder> --participant 01 --screen 0
@@ -196,7 +268,8 @@ On the **stimulus computer**:
 
 ## Checking the recording
 
-On the recording computer:
+On the recording computer, in a terminal with brAInStream's environment
+activated:
 
 ```bash
 python validation/analyse.py "~/brAInStream/lab-validation/bids" --sub 01

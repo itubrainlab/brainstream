@@ -101,26 +101,36 @@ the same frame as the GP3's gaze.
 
 ## Setting up (once)
 
-**The computer.** Install brAInStream from source, with the analysis's
-figures:
+**The computer.** Install brAInStream from source, in its own virtual
+environment, with the analysis's figures. From the repository's folder:
 
 ```bash
+python -m venv .venv
+.venv\Scripts\activate          # Windows
+source .venv/bin/activate       # macOS and Linux
 pip install -e ".[validation]"
 ```
 
-Then install [PsychoPy](https://www.psychopy.org/download.html). The
-standalone app includes pylsl.
+Activate the environment again in every new terminal. Then install PsychoPy
+and pylsl:
+
+```bash
+pip install psychopy pylsl
+```
+
+The [standalone PsychoPy](https://www.psychopy.org/download.html) also
+works: it includes pylsl.
 
 **The eye tracker.** The GP3 runs under OpenGP3's server, so that PsychoPy
 can draw its calibration and brAInStream can record it at the same time. On
 the computer the GP3 is connected to, run:
 
 ```bash
-opengp3 server --display 0
+opengp3 server --display 1
 ```
 
-Use the `--display` the participant's screen is. Gazepoint Control also
-works, in its place.
+Use the `--display` the participant's screen is (1 on the lab's
+computers). Gazepoint Control also works, in its place.
 
 **OBS.** Install the [DistroAV](https://github.com/DistroAV/DistroAV) plugin,
 capture the participant's screen (Display Capture), and turn on
@@ -161,9 +171,13 @@ script sets up four devices:
 
 ## A session
 
-1. **Start everything.** Start `opengp3 server` and OBS, then brAInStream; open
-   the validation project. Seat the participant about 65 cm from the screen.
-2. **Fit the Unicorn.** The data viewer's quality dots should be green.
+1. **Start everything.** `opengp3 server`, brAInStream and the procedure
+   each keep running, so give each its own terminal (with the virtual
+   environment activated). Start `opengp3 server` and OBS, then
+   brAInStream; open the validation project. Seat the participant about
+   65 cm from the screen.
+2. **Fit the EEG headset** (the Unicorn, in these first sessions). The
+   data viewer's quality dots should be green.
 3. **Connect all** (the plug button) in brAInStream. On the GP3 page, check
    the eye view (both eyes, the distance bar in the green).
 4. **Start the procedure**, with PsychoPy's Python (or open it in PsychoPy's
