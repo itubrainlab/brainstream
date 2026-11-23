@@ -130,7 +130,7 @@ class HIampConfig(DeviceConfig):
     digital_input: bool = True
     #: Delay of the USB link, in ms, taken off the time stamps.
     latency_ms: float = 0.0
-    reference: str = ""
+    reference: str = "64"
     ground: str = ""
     placement: str = "10-20"
     cap_manufacturer: str = "g.tec"
