@@ -23,7 +23,9 @@ a stand-in for the driver, as the Unicorn is simulated.
 """
 from __future__ import annotations
 
+import base64
 import functools
+import subprocess
 import sys
 import threading
 import time
@@ -54,13 +56,16 @@ SIMULATED_SERIAL = "HA-SIMULATED"
 SIMULATED_CHANNELS = 64
 #: No amplifier filter (the driver's index for none).
 NO_FILTER = -1
-#: Added to a failed connection on Windows, where g.tec's device service
-#: (which g.Pype asks for the amplifier) sometimes stops answering.
+#: g.tec's Windows service, which g.Pype asks for the amplifier; it
+#: sometimes stops answering until it is restarted.
+WINDOWS_SERVICE = "g.tec Device Service (GDS)"
+#: Added to a failed connection on Windows (the main window then offers to
+#: restart the service: :func:`restart_windows_service`).
 WINDOWS_SERVICE_HINT = (
-    "If the amplifier is switched on and plugged in, g.tec's device "
-    "service may have stopped answering. Restart it: press Win+R, type "
-    "services.msc, find g.tec's device service in the list, right-click "
-    "it and choose Restart. Then connect again.")
+    "If the amplifier is switched on and plugged in, the g.tec Device "
+    "Service (GDS) may have stopped answering. Restart it: press Win+R, "
+    "type services.msc, find \"g.tec Device Service (GDS)\" in the list, "
+    "right-click it and choose Restart. Then connect again.")
 #: The BIDS types a channel other than EEG may have.
 CHANNEL_TYPES = ("EOG", "ECG", "EMG", "MISC")
 
@@ -207,6 +212,44 @@ class HIampConfig(DeviceConfig):
             f" filter #{index} is not one it offers at "
             f"{int(self.sampling_rate)} Hz: choose another in the "
             "settings.")
+
+
+def restart_windows_service(timeout_s: float = 120.0) -> None:
+    """Restart g.tec Device Service (GDS). Restarting a service needs an
+    administrator, so Windows asks for consent (UAC) first. Blocks until
+    the service is back.
+
+    Raises:
+        RuntimeError: If this is not Windows, the consent was refused, or
+            the service could not be restarted.
+    """
+    if sys.platform != "win32":
+        raise RuntimeError(f"The {WINDOWS_SERVICE} is a Windows service.")
+    restart = (f"Restart-Service -DisplayName '{WINDOWS_SERVICE}' -Force "
+               "-ErrorAction Stop")
+    encoded = base64.b64encode(restart.encode("utf-16-le")).decode()
+    # The elevated PowerShell restarts it; this one waits for its exit code
+    # (2 when the consent was refused).
+    command = ("try { $p = Start-Process powershell -Verb RunAs -Wait "
+               "-PassThru -WindowStyle Hidden -ArgumentList "
+               f"'-NoProfile','-EncodedCommand','{encoded}' }} "
+               "catch { exit 2 }; exit $p.ExitCode")
+    try:
+        done = subprocess.run(
+            ["powershell", "-NoProfile", "-NonInteractive", "-Command",
+             command], capture_output=True, text=True, timeout=timeout_s,
+            creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0))
+    except (OSError, subprocess.TimeoutExpired) as error:
+        raise RuntimeError(f"Could not restart the {WINDOWS_SERVICE}: "
+                           f"{error}") from error
+    if done.returncode == 2:
+        raise RuntimeError(f"The {WINDOWS_SERVICE} was not restarted: "
+                           "Windows' administrator consent was refused.")
+    if done.returncode != 0:
+        detail = (done.stderr or done.stdout or "").strip()
+        raise RuntimeError(f"Could not restart the {WINDOWS_SERVICE} (exit "
+                           f"code {done.returncode}). Restart it by hand in "
+                           f"Services (services.msc).\n\n{detail}".strip())
 
 
 # -- the source ------------------------------------------------------------------------

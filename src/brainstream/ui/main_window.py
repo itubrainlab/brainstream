@@ -12,7 +12,7 @@ from PySide6.QtWidgets import (QHBoxLayout, QLabel, QMainWindow, QMessageBox,
                                QWidget)
 
 from .. import APP_NAME, __version__
-from ..devices import DEVICE_TYPES, make_device
+from ..devices import DEVICE_TYPES, hiamp, make_device
 from ..pipeline import SessionPipeline
 from ..devices.base import IDLE, RUNNING, STARTING, Device
 from ..project import Project
@@ -307,9 +307,10 @@ class MainWindow(QMainWindow):
         def done(result):
             if isinstance(result, Exception):
                 self._pending_record = False
-                QMessageBox.critical(
-                    self, f"{device.NAME}",
-                    f"Could not connect the {device.NAME}:\n\n{result}")
+                self._connection_failed(
+                    f"{device.NAME}",
+                    f"Could not connect the {device.NAME}:\n\n{result}",
+                    retry=lambda: self.connect_device(key))
             self._after_connect()
         self._in_thread(device.start, done)
 
@@ -331,12 +332,37 @@ class MainWindow(QMainWindow):
                 self._pending_record = False
                 device = getattr(result, "device", None)
                 name = device.NAME if device is not None else "a device"
-                QMessageBox.critical(
-                    self, APP_NAME,
+                self._connection_failed(
+                    APP_NAME,
                     f"Could not connect {name}, so nothing was connected:"
-                    f"\n\n{result}")
+                    f"\n\n{result}", retry=self.connect_all)
             self._after_connect()
         self._in_thread(lambda: self.pipeline.connect(idle), done)
+
+    def _connection_failed(self, title: str, text: str,
+                           retry: Callable[[], None]) -> None:
+        """Show a failed connection. When the g.HIamp's failed on Windows,
+        offer to restart g.tec's device service and connect again."""
+        box = QMessageBox(QMessageBox.Icon.Critical, title, text,
+                          QMessageBox.StandardButton.Close, self)
+        restart = None
+        if hiamp.WINDOWS_SERVICE_HINT in text:
+            restart = box.addButton("Restart g.tec service",
+                                    QMessageBox.ButtonRole.ActionRole)
+            restart.setToolTip(f"Restart the {hiamp.WINDOWS_SERVICE} "
+                               "(Windows asks for an administrator's "
+                               "consent), then connect again")
+        box.exec()
+        if restart is None or box.clickedButton() is not restart:
+            return
+        self.status_left.setText(f"Restarting the {hiamp.WINDOWS_SERVICE}…")
+
+        def done(result):
+            if isinstance(result, Exception):
+                QMessageBox.critical(self, title, str(result))
+                return
+            retry()
+        self._in_thread(hiamp.restart_windows_service, done)
 
     def _after_connect(self):
         if self._pending_record and not any(

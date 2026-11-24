@@ -101,3 +101,39 @@ def test_failed_connection_suggests_restarting_the_service_on_windows(
         amp._open()
     assert "No g.HIamp found" in str(failed.value)
     assert ("services.msc" in str(failed.value)) == hinted
+
+
+def test_restarting_the_service_asks_for_consent_and_reports_a_refusal(
+        monkeypatch):
+    import base64
+    import subprocess
+    from types import SimpleNamespace
+    from brainstream.devices import hiamp
+
+    calls = []
+
+    def run(args, **kwargs):
+        calls.append(args)
+        return SimpleNamespace(returncode=returncodes.pop(0), stdout="",
+                               stderr="")
+    monkeypatch.setattr(hiamp.sys, "platform", "win32")
+    monkeypatch.setattr(subprocess, "run", run)
+    returncodes = [0, 2, 1]
+    hiamp.restart_windows_service()
+    command = calls[0][-1]
+    assert "-Verb RunAs" in command
+    encoded = command.split("'-EncodedCommand','")[1].split("'")[0]
+    restart = base64.b64decode(encoded).decode("utf-16-le")
+    assert restart.startswith(
+        "Restart-Service -DisplayName 'g.tec Device Service (GDS)'")
+    with pytest.raises(RuntimeError, match="consent was refused"):
+        hiamp.restart_windows_service()
+    with pytest.raises(RuntimeError, match="services.msc"):
+        hiamp.restart_windows_service()
+
+
+def test_restarting_the_service_is_only_for_windows(monkeypatch):
+    from brainstream.devices import hiamp
+    monkeypatch.setattr(hiamp.sys, "platform", "darwin")
+    with pytest.raises(RuntimeError, match="Windows service"):
+        hiamp.restart_windows_service()
