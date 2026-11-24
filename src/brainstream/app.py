@@ -7,6 +7,7 @@
 from __future__ import annotations
 
 import argparse
+import signal
 import sys
 from pathlib import Path
 
@@ -26,6 +27,24 @@ def parse_args(argv=None) -> argparse.Namespace:
     parser.add_argument("--version", action="version",
                         version=f"%(prog)s {__version__}")
     return parser.parse_args(argv)
+
+
+def close_on_signals(app):
+    """Ctrl+C in the terminal (and SIGTERM) close the windows, as the
+    close button does, so the devices are disconnected and the settings
+    saved. Python only sees a signal while its own code runs, so a timer
+    lets it in now and then. Returns the timer, to keep."""
+    from PySide6.QtCore import QTimer
+
+    def close(*_):
+        app.closeAllWindows()
+    signal.signal(signal.SIGINT, close)
+    if hasattr(signal, "SIGTERM"):
+        signal.signal(signal.SIGTERM, close)
+    timer = QTimer()
+    timer.timeout.connect(lambda: None)
+    timer.start(250)
+    return timer
 
 
 def main(argv=None) -> int:
@@ -50,6 +69,7 @@ def main(argv=None) -> int:
     app.setApplicationDisplayName(APP_NAME)
     app.setDesktopFileName("brainstream")
     theme.apply(app)
+    signals = close_on_signals(app)  # noqa: F841 - kept while the app runs
 
     project = None
     if args.project:

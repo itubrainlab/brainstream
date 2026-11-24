@@ -2,12 +2,14 @@
 project's devices on the left."""
 from __future__ import annotations
 
+import logging
 import threading
 import time
 from typing import Callable, Optional
 
 from PySide6.QtCore import QSize, Qt, QTimer, Signal
-from PySide6.QtWidgets import (QHBoxLayout, QLabel, QMainWindow, QMessageBox,
+from PySide6.QtWidgets import (QApplication, QHBoxLayout, QLabel,
+                               QMainWindow, QMessageBox,
                                QStackedWidget, QToolButton, QVBoxLayout,
                                QWidget)
 
@@ -30,6 +32,8 @@ from .project_page import ProjectPage
 from .record_dialog import RecordDialog
 from .unicorn_page import UnicornPage
 from .video_page import VideoPage
+
+log = logging.getLogger(__name__)
 
 VIEW_INTERVAL_MS = 40
 STATUS_INTERVAL_MS = 500
@@ -91,10 +95,16 @@ class MainWindow(QMainWindow):
         self.record_started: Optional[float] = None
         self._pending_record = False
         self._closing = False
+        self._shut_down = False
         self.relay = Relay(self)
         self.relay.state.connect(self._on_state)
         self.relay.error.connect(self._on_error)
         self.relay.done.connect(lambda callback, result: callback(result))
+        # Quitting without closing the window (Cmd+Q, logging off) still
+        # disconnects the devices.
+        app = QApplication.instance()
+        if app is not None:
+            app.aboutToQuit.connect(self.shutdown_devices)
 
         self.setWindowTitle(f"{project.name} — {APP_NAME}")
         self.setWindowIcon(icons.app())
@@ -555,6 +565,33 @@ class MainWindow(QMainWindow):
         self._switching = True
         self.close()
 
+    def shutdown_devices(self) -> None:
+        """Stop the recording, if any, and disconnect every device, saving
+        their settings. Called when the window closes and, in case it
+        didn't, when the application quits; only the first call acts."""
+        if self._shut_down:
+            return
+        self._shut_down = True
+        for timer in (self.view_timer, self.status_timer):
+            try:
+                timer.stop()
+            except RuntimeError:  # already deleted by Qt
+                pass
+        if self._recording():
+            try:
+                self.session.stop()
+            except Exception:  # noqa: BLE001 - disconnecting regardless
+                log.exception("Could not stop the recording on shutdown")
+        try:
+            self.pipeline.stop()
+        except Exception:  # noqa: BLE001
+            log.exception("Could not disconnect every device on shutdown")
+        still = [d.NAME for d in self.devices.values() if d.state != IDLE]
+        if still:
+            log.warning("Still connected on shutdown: %s", ", ".join(still))
+        for key in self.devices:
+            self._save_config(key)
+
     def closeEvent(self, event):
         if self._recording():
             answer = QMessageBox.question(
@@ -563,15 +600,7 @@ class MainWindow(QMainWindow):
                 event.ignore()
                 self._switching = False
                 return
-            self.session.stop()
-        self.view_timer.stop()
-        self.status_timer.stop()
-        try:
-            self.pipeline.stop()
-        except Exception:  # noqa: BLE001
-            pass
-        for key, device in self.devices.items():
-            self._save_config(key)
+        self.shutdown_devices()
         event.accept()
         if getattr(self, "_switching", False):
             self.switch_project.emit()

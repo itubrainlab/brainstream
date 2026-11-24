@@ -63,3 +63,38 @@ def test_simulate_flag_is_shown_and_not_saved(tmp_path):
     assert page.forced.isHidden()
     assert "simulated" not in page.state_label.text()
     window.close()
+
+
+def _connected_window(tmp_path):
+    app = QApplication.instance() or QApplication([])
+    project = Project.create(tmp_path / "p", "P")
+    project.add_device("unicorn", {})
+    project.add_device("lsl", {})
+    window = MainWindow(project, simulate=True)
+    window.show()
+    window.pipeline.connect(list(window.devices.values()))
+    assert all(d.running for d in window.devices.values())
+    return app, window
+
+
+def test_quitting_without_closing_the_window_disconnects(tmp_path):
+    app, window = _connected_window(tmp_path)
+    app.aboutToQuit.emit()
+    assert not any(d.running for d in window.devices.values())
+    window.shutdown_devices()  # a second call does nothing
+    window.close()
+
+
+def test_ctrl_c_closes_the_window_and_disconnects(tmp_path):
+    import signal
+    from brainstream.app import close_on_signals
+    app, window = _connected_window(tmp_path)
+    before = signal.getsignal(signal.SIGINT)
+    try:
+        timer = close_on_signals(app)
+        signal.getsignal(signal.SIGINT)(signal.SIGINT, None)
+        timer.stop()
+    finally:
+        signal.signal(signal.SIGINT, before)
+    assert not window.isVisible()
+    assert not any(d.running for d in window.devices.values())
